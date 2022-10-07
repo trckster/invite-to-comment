@@ -1,6 +1,9 @@
 import { Telegraf } from 'telegraf';
+import * as dotenv from 'dotenv'
 
-const bot = new Telegraf('');
+dotenv.config()
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.command('ping', async (ctx) => {
     await ctx.reply(`pong`);
