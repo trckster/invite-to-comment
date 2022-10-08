@@ -6,7 +6,13 @@ dotenv.config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.command('ping', async (ctx) => {
-    await ctx.reply(`pong`);
+    await ctx.reply('pong');
+})
+
+bot.on('chat_join_request', async (ctx) => {
+
+    console.log(ctx)
+    console.log('works')
 })
 
 bot.launch();
