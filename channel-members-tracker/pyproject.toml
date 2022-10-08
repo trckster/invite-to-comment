@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "channel-members-tracker"
+version = "0.1.0"
+description = ""
+authors = ["Daniil <daniil@vivaldi.net>"]
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Telethon = "^1.25.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+tracker = "src.main:launch"
+
