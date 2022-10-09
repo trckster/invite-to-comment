@@ -4,6 +4,9 @@ from telethon.sessions import StringSession
 from dotenv import load_dotenv
 from src.database import Database
 
+TYPE_UNSUBSCRIBED = 0
+TYPE_SUBSCRIBED = 1
+
 
 def launch():
     load_dotenv()
@@ -18,7 +21,9 @@ def main():
 
     with TelegramClient(session_key, api_id, api_hash) as client:
         channel = client.get_entity(os.getenv('CHANNEL_HANDLE'))
-        events = client.get_admin_log(channel)
+
+        id_to_start_with = db.get_max_event_id() + 1
+        events = client.get_admin_log(channel, min_id=id_to_start_with)
 
         save_events(db, events)
 
@@ -26,6 +31,6 @@ def main():
 def save_events(db: Database, events: list):
     for event in events:
         if event.joined:
-            print(f'User {event.user_id} joined')
+            db.create_event(event.id, event.date, TYPE_SUBSCRIBED, event.user_id)
         elif event.left:
-            print(f'User {event.user_id} left')
+            db.create_event(event.id, event.date, TYPE_UNSUBSCRIBED, event.user_id)
