@@ -1,8 +1,10 @@
+import json
 import os
 from telethon import TelegramClient, sync
 from telethon.sessions import StringSession
 from dotenv import load_dotenv
 from src.database import Database
+from src.rabbitmq import RabbitMQ
 
 TYPE_UNSUBSCRIBED = 0
 TYPE_SUBSCRIBED = 1
@@ -26,6 +28,22 @@ def main():
         events = client.get_admin_log(channel, min_id=id_to_start_with)
 
         save_events(db, events)
+
+    unprocessed_events = db.get_unprocessed_events()
+    distribute_events(unprocessed_events)
+
+
+def distribute_events(events: list):
+    queue = RabbitMQ()
+    for event in events:
+        data = {
+            'action_id': event[0],
+            'action': event[3],
+            'user_id': event[4],
+            'username': event[5]
+        }
+
+        queue.publish(json.dumps(data))
 
 
 def save_events(db: Database, events: list):

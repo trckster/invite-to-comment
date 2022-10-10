@@ -39,3 +39,12 @@ class Database:
         self.cursor.execute('INSERT INTO events (id, happened_at, type, user_id, username)' +
                             'VALUES (%s, %s, %s, %s, %s)', (id, happened_at, type, user_id, username))
         self.commit()
+
+    def get_unprocessed_events(self):
+        self.cursor.execute('SELECT * FROM events WHERE processed_at IS NULL;')
+
+        return self.cursor.fetchall()
+
+    def __del__(self):
+        self.cursor.close()
+        self.connection.close()
