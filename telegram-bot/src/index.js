@@ -1,18 +1,15 @@
 import { Telegraf } from 'telegraf';
 import * as dotenv from 'dotenv'
+import { publish } from './amqp.js';
 
 dotenv.config()
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.command('ping', async (ctx) => {
-    await ctx.reply('pong');
-})
+bot.use(async (context) => {
+    console.log(JSON.stringify(context.update))
 
-bot.on('chat_join_request', async (ctx) => {
-
-    console.log(ctx)
-    console.log('works')
+    await publish(JSON.stringify(context.update))
 })
 
 bot.launch();
