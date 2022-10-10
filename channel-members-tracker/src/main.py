@@ -30,7 +30,7 @@ def main():
 
 def save_events(db: Database, events: list):
     for event in events:
-        if event.joined:
-            db.create_event(event.id, event.date, TYPE_SUBSCRIBED, event.user_id)
+        if event.joined or event.joined_by_invite:
+            db.create_event(event.id, event.date, TYPE_SUBSCRIBED, event.user_id, event.user.username)
         elif event.left:
-            db.create_event(event.id, event.date, TYPE_UNSUBSCRIBED, event.user_id)
+            db.create_event(event.id, event.date, TYPE_UNSUBSCRIBED, event.user_id, event.user.username)

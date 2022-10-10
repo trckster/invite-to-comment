@@ -21,8 +21,10 @@ class Database:
         self.cursor.execute('''CREATE TABLE IF NOT EXISTS events (
             id BIGINT PRIMARY KEY,
             happened_at TIMESTAMP NOT NULL,
+            processed_at TIMESTAMP,
             type SMALLINT NOT NULL,
             user_id BIGINT NOT NULL,
+            username VARCHAR(255),
             created_at TIMESTAMP NOT NULL DEFAULT NOW()
         );''')
         self.commit()
@@ -33,7 +35,7 @@ class Database:
 
         return result[0] or 0
 
-    def create_event(self, id: int, happened_at: datetime, type: int, user_id: int):
-        self.cursor.execute('INSERT INTO events (id, happened_at, type, user_id)' +
-                            'VALUES (%s, %s, %s, %s)', (id, happened_at, type, user_id))
+    def create_event(self, id: int, happened_at: datetime, type: int, user_id: int, username: str = None):
+        self.cursor.execute('INSERT INTO events (id, happened_at, type, user_id, username)' +
+                            'VALUES (%s, %s, %s, %s, %s)', (id, happened_at, type, user_id, username))
         self.commit()
