@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.0.3",
+    "telegraf": "^4.10.0"
+  },
+  "scripts": {
+    "launch": "node src/index.js"
+  }
+}
