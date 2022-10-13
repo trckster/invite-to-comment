@@ -31,6 +31,8 @@ def main():
 
     unprocessed_events = db.get_unprocessed_events()
     distribute_events(unprocessed_events)
+    if unprocessed_events:
+        db.set_events_processed(unprocessed_events)  # TODO remove it
 
 
 def distribute_events(events: list):

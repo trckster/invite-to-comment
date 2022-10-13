@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timezone
 import os
 import psycopg2
 
@@ -44,6 +44,13 @@ class Database:
         self.cursor.execute('SELECT * FROM events WHERE processed_at IS NULL;')
 
         return self.cursor.fetchall()
+
+    # TODO temporary measure
+    def set_events_processed(self, events: list):
+        unprocessed_ids = [str(event[0]) for event in events]
+        self.cursor.execute('UPDATE events SET processed_at=%s WHERE id IN %s;',
+                            (datetime.now(timezone.utc), tuple(unprocessed_ids)))
+        self.commit()
 
     def __del__(self):
         self.cursor.close()
