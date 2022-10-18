@@ -2,6 +2,15 @@ version: "3.9"
 
 services:
 
+  channel-members-tracker:
+    build:
+      context: channel-members-tracker
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - rabbit
+
   db:
     image: postgres
     restart: unless-stopped
@@ -17,3 +26,5 @@ services:
     image: rabbitmq
     ports:
       - "127.0.0.1:2765:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
