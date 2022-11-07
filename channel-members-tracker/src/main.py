@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import json
 import os
 from telethon import TelegramClient, sync
@@ -6,8 +7,8 @@ from dotenv import load_dotenv
 from src.database import Database
 from src.rabbitmq import RabbitMQ
 
-TYPE_UNSUBSCRIBED = 0
-TYPE_SUBSCRIBED = 1
+TYPE_SUBSCRIBED = 'subscribed'
+TYPE_UNSUBSCRIBED = 'unsubscribed'
 
 
 def launch():
@@ -31,8 +32,6 @@ def main():
 
     unprocessed_events = db.get_unprocessed_events()
     distribute_events(unprocessed_events)
-    if unprocessed_events:
-        db.set_events_processed(unprocessed_events)  # TODO remove it
 
 
 def distribute_events(events: list):
@@ -49,8 +48,21 @@ def distribute_events(events: list):
 
 
 def save_events(db: Database, events: list):
+    log('New events count: %d' % len(events))
+
     for event in events:
         if event.joined or event.joined_by_invite:
-            db.create_event(event.id, event.date, TYPE_SUBSCRIBED, event.user_id, event.user.username)
+            event_type = TYPE_SUBSCRIBED
         elif event.left:
-            db.create_event(event.id, event.date, TYPE_UNSUBSCRIBED, event.user_id, event.user.username)
+            event_type = TYPE_UNSUBSCRIBED
+        else:
+            continue
+
+        log(f'{event.user_id} ({event.user.username}): {event_type}')
+        db.create_event(event.id, event.date, event_type, event.user_id, event.user.username)
+
+
+def log(message: str):
+    time = datetime.now(timezone.utc)
+
+    print(f'[{time}] {message}')
