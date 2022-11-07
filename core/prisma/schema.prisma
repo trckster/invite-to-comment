@@ -1,0 +1,56 @@
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+enum InviteStatus {
+    waiting
+    cancelled
+    times_up
+    successful
+}
+
+model Invite {
+    @@map("invites")
+    id               Int @id @default(autoincrement())
+    inviter_id       BigInt
+    invited_id       BigInt?
+    invited_username String? @db.VarChar(255)
+    status           InviteStatus
+    created_at       DateTime @default(now())
+}
+
+model ChatMember {
+    @@map("chat_members")
+    id        Int      @id @default(autoincrement())
+    user_id   BigInt      @unique
+    joined_at DateTime @default(now())
+}
+
+model Subscriber {
+    @@map("subscribers")
+    id         Int      @id @default(autoincrement())
+    user_id    BigInt      @unique
+    created_at DateTime @default(now())
+}
+
+enum EventType {
+    subscribed
+    unsubscribed
+}
+
+model Event {
+    @@map("events")
+    id                Int    @id @default(autoincrement())
+    telegram_event_id BigInt @unique
+    happened_at       DateTime
+    processed_at      DateTime?
+    type              EventType
+    user_id           BigInt
+    username          String?  @db.VarChar(255)
+    created_at        DateTime @default(now())
+}
