@@ -7,9 +7,11 @@ dotenv.config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.use(async (context) => {
-    console.log(JSON.stringify(context.update))
+    const data = JSON.stringify(context.update)
 
-    await publish(JSON.stringify(context.update))
+    console.log(data)
+
+    await publish(data)
 })
 
 bot.launch();
