@@ -1,21 +1,15 @@
 import * as dotenv from 'dotenv'
-import * as amqp from 'amqplib'
-import { Telegraf } from 'telegraf';
+import {telegramApi} from "./services/telegram-api.js"
+import {recognizeEvent} from "./services/event-recognizer.js";
+import {startConsuming} from "./services/amqp.js"
 
 dotenv.config()
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+await startConsuming('main', async function (message) {
+    const event = JSON.parse(message.content.toString())
 
-const connection = await amqp.connect('amqp://' + process.env.RABBITMQ_HOST)
-const channel = await connection.createChannel()
-await channel.assertQueue('main')
+    const eventHandler = recognizeEvent(event)
+    await eventHandler.process()
 
-channel.consume('main', processMessage, {
-    noAck: true
-});
-
-function processMessage(message) {
-    const event = message.content.toString()
-
-    bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, event)
-}
+    await telegramApi.sendToAdmin(event)
+})

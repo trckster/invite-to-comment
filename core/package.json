@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@prisma/client": "4.0.0",
+    "@prisma/client": "^4.6.1",
     "amqplib": "^0.10.3",
     "dotenv": "^16.0.3",
     "prisma": "^4.5.0",
