@@ -39,9 +39,9 @@ def distribute_events(events: list):
     for event in events:
         data = {
             'action_id': event[0],
-            'action': event[3],
-            'user_id': event[4],
-            'username': event[5]
+            'action': event[4],
+            'user_id': event[5],
+            'username': event[6]
         }
 
         queue.publish(json.dumps(data))
