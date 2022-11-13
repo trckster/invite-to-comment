@@ -7,6 +7,8 @@ dotenv.config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.use(async (context) => {
+    context.update.action = 'message'
+
     const data = JSON.stringify(context.update)
 
     console.log(data)
