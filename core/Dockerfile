@@ -8,4 +8,6 @@ RUN yarn install
 
 ADD . .
 
+RUN npx prisma generate
+
 CMD ["yarn", "launch"]
