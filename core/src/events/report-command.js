@@ -12,8 +12,9 @@ class ReportCommand extends Command {
         if (realText === '') {
             await this.respond('/report дальше надо написать свой текст')
         } else {
-            await telegramApi.sendToAdmin(this.action.message.text)
-            await this.respond('Reported 👍')
+            // TODO remove /report and add username with id
+            await telegramApi.sendToAdmin(this.event.message.text)
+            await this.respond('Передал 👍')
         }
     }
 }

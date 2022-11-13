@@ -7,7 +7,7 @@ class InviteCommand extends Command {
 
         if (await db.hasActiveInvite()) {
             await this.respond(
-                'У вас уже есть актвиное приглашение, чтобы его отменить, пришлите /cancel'
+                'У вас уже есть актвиное приглашение, чтобы его отменить, отправьте /cancel'
             )
 
             return

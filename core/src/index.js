@@ -8,8 +8,10 @@ dotenv.config()
 await startConsuming('main', async function (message) {
     const event = JSON.parse(message.content.toString())
 
+    console.log(event)
+
     const eventHandler = recognizeEvent(event)
     await eventHandler.process()
 
-    await telegramApi.sendToAdmin(event)
+    await telegramApi.sendToAdmin(JSON.stringify(event))
 })

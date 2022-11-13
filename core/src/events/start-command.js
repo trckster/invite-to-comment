@@ -3,7 +3,7 @@ import {db} from "../services/db.js";
 
 function getStartText() {
     return 'Чтобы пригласить друга в канал @' + process.env.CHANNEL_HANDLE + ', ' +
-        'отправьте его @юзернейм или перешлите от него сообщение.'
+        'отправьте его @юзернейм или ID.'
 }
 
 class StartCommand extends Command {

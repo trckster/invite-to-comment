@@ -8,12 +8,13 @@ import {StartCommand} from "../events/start-command.js";
 import {UnknownCommand} from "../events/unknown-command.js";
 import {ReportCommand} from "../events/report-command.js";
 import {CancelCommand} from "../events/cancel-command.js";
+import {GetIdCommand} from "../events/get-id-command.js";
 
 function recognizeEvent(event) {
-    switch (this.event.action) {
-        case 'user-subscribed':
+    switch (event.action) {
+        case 'subscribed':
             return new UserSubscribed(event)
-        case 'user-unsubscribed':
+        case 'unsubscribed':
             return new UserUnsubscribed(event)
         case 'join-request':
             return new JoinRequestMade(event)
@@ -24,10 +25,6 @@ function recognizeEvent(event) {
 
 function recognizeMessage(event) {
     const message = event.message.text
-
-    if (false/** TODO is forwarded? */ || message.startsWith('@')) {
-        return new InviteCommand(event)
-    }
 
     if (message.startsWith('/cancel')) {
         return new CancelCommand(event);
@@ -49,7 +46,19 @@ function recognizeMessage(event) {
         return new ReportCommand(event)
     }
 
+    if (message.startsWith('/id')) {
+        return new GetIdCommand(event)
+    }
+
+    if (isValidTelegramUserId(message) || message.startsWith('@')) {
+        return new InviteCommand(event)
+    }
+
     return new UnknownCommand(event)
+}
+
+function isValidTelegramUserId(text) {
+    return !isNaN(text)
 }
 
 export {recognizeEvent}

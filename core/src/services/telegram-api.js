@@ -1,12 +1,15 @@
 import {Telegraf} from "telegraf"
+import * as dotenv from "dotenv";
+
+dotenv.config()
 
 class TelegramApi {
     constructor() {
         this.bot = new Telegraf(process.env.BOT_TOKEN)
     }
 
-    async sendMessage(chat, message) {
-        await this.bot.telegram.sendMessage(chat, message)
+    async sendMessage(chat, message, extra = {}) {
+        await this.bot.telegram.sendMessage(chat, message, extra)
     }
 
     async sendToAdmin(message) {

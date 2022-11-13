@@ -7,8 +7,8 @@ class Command extends AppEvent {
         this.chatId = event.message.chat.id
     }
 
-    async respond(message) {
-        await telegramApi.sendMessage(this.chatId, message)
+    async respond(message, extra = {}) {
+        await telegramApi.sendMessage(this.chatId, message, extra)
     }
 }
 
