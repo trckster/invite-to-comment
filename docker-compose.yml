@@ -1,17 +1,46 @@
 version: "3.9"
 
+x-services-common:
+  &common
+  env_file:
+    - .env
+  depends_on:
+    migrations:
+      condition: service_completed_successfully
+    postgres:
+      condition: service_healthy
+    rabbit:
+      condition: service_healthy
+  restart: unless-stopped
+
+
 services:
 
+  telegram-receiver:
+    <<: *common
+    build:
+      context: telegram-receiver
+
   channel-members-tracker:
+    <<: *common
     build:
       context: channel-members-tracker
+
+  core:
+    <<: *common
+    build:
+      context: core
+
+  migrations:
     env_file:
       - .env
     depends_on:
-      - db
-      - rabbit
+      - postgres
+    build:
+      context: core
+    command: npx prisma migrate deploy
 
-  db:
+  postgres:
     image: postgres
     restart: unless-stopped
     environment:
@@ -20,10 +49,11 @@ services:
     ports:
       - "127.0.0.1:2345:5432"
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}" ]
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}" ]
 
   rabbit:
     image: rabbitmq
+    restart: unless-stopped
     ports:
       - "127.0.0.1:2765:5672"
     healthcheck:

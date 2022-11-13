@@ -17,4 +17,4 @@ RUN chmod 0644 /etc/cron.d/tracker
 
 ADD . .
 
-CMD cron && tail -f /var/log/cron.log
+CMD printenv >> /etc/environment && cron && tail -f /var/log/cron.log
