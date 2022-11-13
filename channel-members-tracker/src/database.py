@@ -28,7 +28,7 @@ class Database:
         self.commit()
 
     def get_unprocessed_events(self):
-        self.cursor.execute('SELECT * FROM events WHERE processed_at IS NULL;')
+        self.cursor.execute('SELECT * FROM events WHERE processed_at IS NULL ORDER BY happened_at;')
 
         return self.cursor.fetchall()
 
