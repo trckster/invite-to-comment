@@ -6,15 +6,21 @@ dotenv.config()
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.use(async (context) => {
-    context.update.action = 'message'
+bot.use(async ({ update }) => {
+    update.action = 'message'
 
-    const data = JSON.stringify(context.update)
+    const data = JSON.stringify(update)
 
-    console.log(data)
+    log(data)
 
     await publish(data)
 })
+
+function log(message) {
+    const now = new Date().toLocaleString()
+
+    console.log(`[${now}]`, message)
+}
 
 bot.launch();
 

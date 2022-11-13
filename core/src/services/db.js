@@ -28,6 +28,17 @@ class Database {
     async createInvite(inviterId, invitedId, invitedUsername) {
 
     }
+
+    async markEventAsProcessed(id) {
+        await this.prisma.event.update({
+            where: {
+                id: id,
+            },
+            data: {
+                processed_at: new Date()
+            }
+        })
+    }
 }
 
 const db = new Database()
