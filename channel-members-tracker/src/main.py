@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import json
 import os
-from telethon import TelegramClient, sync
+from telethon import TelegramClient, sync, errors
 from telethon.sessions import StringSession
 from dotenv import load_dotenv
 from src.database import Database
@@ -26,7 +26,19 @@ def main():
         channel = client.get_entity(os.getenv('CHANNEL_HANDLE'))
 
         id_to_start_with = db.get_max_event_id() + 1
-        events = client.get_admin_log(channel, min_id=id_to_start_with)
+
+        try:
+            events = client.get_admin_log(channel, min_id=id_to_start_with)
+        except errors.FloodError as e:
+            log('FloodError occurred')
+
+            queue = RabbitMQ()
+            queue.publish(json.dumps({
+                'action': 'error',
+                'message': 'Flood error occurred'
+            }))
+
+            raise e
 
         save_events(db, events)
 
