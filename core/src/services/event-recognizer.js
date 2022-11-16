@@ -9,6 +9,7 @@ import {UnknownCommand} from "../events/unknown-command.js";
 import {ReportCommand} from "../events/report-command.js";
 import {CancelCommand} from "../events/cancel-command.js";
 import {GetIdCommand} from "../events/get-id-command.js";
+import {CheckCommand} from "../events/check-command.js";
 
 function recognizeEvent(event) {
     switch (event.action) {
@@ -48,6 +49,10 @@ function recognizeMessage(event) {
 
     if (message.startsWith('/id')) {
         return new GetIdCommand(event)
+    }
+
+    if (message.startsWith('/check')) {
+        return new CheckCommand(event)
     }
 
     if (isValidTelegramUserId(message) || message.startsWith('@')) {

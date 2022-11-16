@@ -54,3 +54,14 @@ model Event {
     username          String?  @db.VarChar(255)
     created_at        DateTime @default(now())
 }
+
+enum RequestType {
+    adminLog
+}
+
+model Request {
+    @@map("requests")
+    id           Int @id @default(autoincrement())
+    type         RequestType
+    processed_at DateTime @default(now())
+}
