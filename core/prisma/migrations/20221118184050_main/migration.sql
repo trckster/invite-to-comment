@@ -5,7 +5,7 @@ CREATE TYPE "InviteStatus" AS ENUM ('waiting', 'cancelled', 'times_up', 'success
 CREATE TYPE "EventType" AS ENUM ('subscribed', 'unsubscribed');
 
 -- CreateEnum
-CREATE TYPE "RequestType" AS ENUM ('adminLog');
+CREATE TYPE "RequestType" AS ENUM ('admin_log');
 
 -- CreateTable
 CREATE TABLE "invites" (

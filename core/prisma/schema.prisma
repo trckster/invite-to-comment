@@ -56,7 +56,7 @@ model Event {
 }
 
 enum RequestType {
-    adminLog
+    admin_log
 }
 
 model Request {
