@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 import os
 import psycopg2
 
+REQUEST_TYPE_ADMIN_LOG = 'admin_log'
+
 
 class Database:
     def __init__(self):
@@ -31,6 +33,11 @@ class Database:
         self.cursor.execute('SELECT * FROM events WHERE processed_at IS NULL ORDER BY happened_at;')
 
         return self.cursor.fetchall()
+
+    def save_request(self):
+        self.cursor.execute('INSERT INTO requests (type) VALUES (%s)', (REQUEST_TYPE_ADMIN_LOG,))
+
+        self.commit()
 
     def __del__(self):
         self.cursor.close()
