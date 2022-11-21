@@ -7,6 +7,8 @@ from src.logger import log
 from json import dumps
 from telethon import errors
 
+# TODO remove duplicates from this file
+
 TYPE_SUBSCRIBED = 'subscribed'
 TYPE_UNSUBSCRIBED = 'unsubscribed'
 

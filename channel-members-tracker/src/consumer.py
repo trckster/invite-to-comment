@@ -1,18 +1,26 @@
 import sys
 from rabbitmq import RabbitMQ
 from dotenv import load_dotenv
+from json import loads
+from logger import log
+from admin_log_processor import AdminLogProcessor
 
 
-def callback_example(ch, method, props, body):
-    print("[x] Received %r" % body)
+def receive_command(ch, method, props, body):
+    data = loads(body)
+
+    if data['command'] == 'check-admin-log':
+        processor = AdminLogProcessor(data['chatId'])
+        processor.run()
+    else:
+        log('Unknown command: %s' % data['command'])
 
 
 def main():
     load_dotenv()
 
     queue = RabbitMQ()
-
-    queue.consume(callback_example)
+    queue.consume(receive_command)
 
 
 try:

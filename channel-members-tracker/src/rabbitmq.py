@@ -3,6 +3,7 @@ import pika
 
 
 class RabbitMQ:
+    # TODO make one rabbitmq instance work with one channel
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
         self.channel = self.connection.channel()
@@ -18,3 +19,6 @@ class RabbitMQ:
 
     def close_connection(self):
         self.connection.close()
+
+    def __del__(self):
+        self.close_connection()

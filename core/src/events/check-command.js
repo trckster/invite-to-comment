@@ -9,7 +9,8 @@ class CheckCommand extends Command {
         await this.respond('Проверяем ♻')
 
         await publish(JSON.stringify({
-            data: 'Some useful information'
+            command: 'check-admin-log',
+            chatId: this.chatId
         }), 'mtproto-requests')
     }
 }
