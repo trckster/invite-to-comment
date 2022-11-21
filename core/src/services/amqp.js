@@ -10,4 +10,12 @@ async function startConsuming(queue, handler) {
     });
 }
 
-export {startConsuming}
+async function publish(data, channelName) {
+    const connection = await amqp.connect('amqp://' + process.env.RABBITMQ_HOST)
+    const channel = await connection.createChannel()
+    await channel.assertQueue(channelName)
+    await channel.sendToQueue(channelName, Buffer.from(data))
+}
+
+
+export {startConsuming, publish}

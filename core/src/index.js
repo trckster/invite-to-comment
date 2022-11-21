@@ -5,7 +5,7 @@ import {startConsuming} from "./services/amqp.js"
 
 dotenv.config()
 
-await startConsuming('main', async function (message) {
+await startConsuming('events', async function (message) {
     const event = JSON.parse(message.content.toString())
 
     log(event)

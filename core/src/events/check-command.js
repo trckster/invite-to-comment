@@ -1,4 +1,5 @@
 import {Command} from "./command.js";
+import {publish} from "../services/amqp.js";
 
 class CheckCommand extends Command {
     async process() {
@@ -6,7 +7,10 @@ class CheckCommand extends Command {
         // last request was sent more than a minute ago?
 
         await this.respond('Проверяем ♻')
-        // send to queue
+
+        await publish(JSON.stringify({
+            data: 'Some useful information'
+        }), 'mtproto-requests')
     }
 }
 
