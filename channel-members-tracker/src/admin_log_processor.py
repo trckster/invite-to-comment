@@ -1,8 +1,8 @@
-from database import Database
-from mtproto import TelegramAPI
-from rabbitmq import RabbitMQ
+from src.database import Database
+from src.mtproto import TelegramAPI
+from src.rabbitmq import RabbitMQ
+from src.logger import log
 from telethon import errors
-from logger import log
 from json import dumps
 
 TYPE_SUBSCRIBED = 'subscribed'
@@ -10,7 +10,7 @@ TYPE_UNSUBSCRIBED = 'unsubscribed'
 
 
 class AdminLogProcessor:
-    def __init__(self, initiator):
+    def __init__(self, initiator=None):
         self.initiator = initiator
 
         self.db = Database()

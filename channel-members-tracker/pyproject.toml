@@ -19,5 +19,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 tracker = "src.main:launch"
-generate-session-key = "src.generate-session-key:launch"
+consumer = "src.main:consume"
+generate-session-key = "src.generate_session_key:launch"
 
