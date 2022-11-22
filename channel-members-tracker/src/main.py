@@ -14,5 +14,5 @@ def launch():
 def consume():
     load_dotenv()
 
-    queue = RabbitMQ()
+    queue = RabbitMQ('mtproto-requests')
     queue.consume(receive_command)

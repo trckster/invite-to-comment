@@ -3,18 +3,17 @@ import pika
 
 
 class RabbitMQ:
-    # TODO make one rabbitmq instance work with one channel
-    def __init__(self):
+    def __init__(self, queue):
+        self.queue = queue
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv('RABBITMQ_HOST')))
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue='events', durable=True)
-        self.channel.queue_declare(queue='mtproto-requests', durable=True)
+        self.channel.queue_declare(queue=queue, durable=True)
 
     def publish(self, data):
-        self.channel.basic_publish(exchange='', routing_key='events', body=data)
+        self.channel.basic_publish(exchange='', routing_key=self.queue, body=data)
 
     def consume(self, callback):
-        self.channel.basic_consume(queue='mtproto-requests', on_message_callback=callback, auto_ack=True)
+        self.channel.basic_consume(queue=self.queue, on_message_callback=callback, auto_ack=True)
         self.channel.start_consuming()
 
     def close_connection(self):

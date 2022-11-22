@@ -15,7 +15,7 @@ class AdminLogProcessor:
 
         self.db = Database()
         self.mtproto = TelegramAPI()
-        self.queue = RabbitMQ()
+        self.queue = RabbitMQ('events')
 
     def report_flood_error(self):
         log('FloodError occurred')
@@ -65,7 +65,6 @@ class AdminLogProcessor:
 
             events_count += 1
 
-            # TODO this log didn't work last time
             log(f'{event.user_id} ({event.user.username}): {event_type}')
 
             self.db.create_event(event.id, event.date, event_type, event.user_id, event.user.username)
