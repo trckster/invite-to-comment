@@ -28,10 +28,18 @@ function recognizeEvent(event) {
 }
 
 function recognizeMessage(event) {
+    if (messageFromChatOrChannel(event)) {
+        return
+    }
+
     const message = event.message.text
 
+    if (message === undefined) {
+        return new UnknownCommand(event)
+    }
+
     if (message.startsWith('/cancel')) {
-        return new CancelCommand(event);
+        return new CancelCommand(event)
     }
 
     if (message.startsWith('/ping')) {
@@ -67,6 +75,10 @@ function recognizeMessage(event) {
 
 function isValidTelegramUserId(text) {
     return !isNaN(text)
+}
+
+function messageFromChatOrChannel(event) {
+    return event.channel_post || event.message.chat.id < 0
 }
 
 export {recognizeEvent}

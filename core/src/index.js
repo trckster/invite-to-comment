@@ -10,10 +10,18 @@ await startConsuming('events', async function (message) {
 
     log(event)
 
-    const eventHandler = recognizeEvent(event)
-    await eventHandler.process()
+    try {
+        const eventHandler = recognizeEvent(event)
 
-    await telegramApi.sendToAdmin(JSON.stringify(event))
+        if (eventHandler) {
+            await eventHandler.process()
+        }
+    } catch (error) {
+        log(error)
+
+        await telegramApi.sendToAdmin(JSON.stringify(event))
+        await telegramApi.sendToAdmin('Error happened: ' + error.toString())
+    }
 })
 
 function log(message) {
