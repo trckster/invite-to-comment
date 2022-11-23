@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "InviteStatus" AS ENUM ('waiting', 'cancelled', 'times_up', 'successful');
+CREATE TYPE "InviteStatus" AS ENUM ('pending', 'cancelled', 'times_up', 'successful');
 
 -- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('subscribed', 'unsubscribed');
@@ -23,6 +23,7 @@ CREATE TABLE "invites" (
 CREATE TABLE "chat_members" (
     "id" SERIAL NOT NULL,
     "user_id" BIGINT NOT NULL,
+    "username" VARCHAR(255) NOT NULL,
     "joined_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "chat_members_pkey" PRIMARY KEY ("id")

@@ -1,10 +1,9 @@
 import {Command} from "./command.js";
 import {db} from "../services/db.js";
+import {isValidTelegramUserId} from "../services/event-recognizer.js";
 
 class InviteCommand extends Command {
     async process() {
-        // TODO check forward is recognizable
-
         if (await db.hasActiveInvite()) {
             await this.respond(
                 'У вас уже есть актвиное приглашение, чтобы его отменить, отправьте /cancel'
@@ -13,25 +12,18 @@ class InviteCommand extends Command {
             return
         }
 
-        if (true/** TODO Is forward? */) {
-            await this.inviteByForward()
+        if (isValidTelegramUserId(this.event.message.text)) {
+            await this.inviteById()
         } else {
             await this.inviteByHandle()
         }
     }
 
-    async inviteByForward() {
+    async inviteById() {
+        return await this.respond('Trying to invite by id')
         const invitedId = this.event.WHAT
 
-        if (await db.wasSubscriber(invitedId)) {
-            await this.respond(
-                'Этот пользователь уже был когда-то подписан на канал, попробуйте другого!'
-            )
-
-            return
-        }
-
-        if (await db.alreadyInvitedByForward(invitedId)) {
+        if (await db.alreadyInvitedById(invitedId)) {
             await this.respond(
                 'Кто-то уже пригласил этого пользователя, попробуйте другого!'
             )
@@ -45,6 +37,7 @@ class InviteCommand extends Command {
     }
 
     async inviteByHandle() {
+        return await this.respond('Trying to invite by handle')
         const username = this.event.message.text.substring(1)
 
         if (await db.alreadyInvitedByUsername(username)) {

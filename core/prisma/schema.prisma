@@ -8,7 +8,7 @@ generator client {
 }
 
 enum InviteStatus {
-    waiting
+    pending
     cancelled
     times_up
     successful
@@ -27,7 +27,8 @@ model Invite {
 model ChatMember {
     @@map("chat_members")
     id        Int      @id @default(autoincrement())
-    user_id   BigInt      @unique
+    user_id   BigInt   @unique
+    username  String   @db.VarChar(255)
     joined_at DateTime @default(now())
 }
 

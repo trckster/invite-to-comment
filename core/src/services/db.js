@@ -10,14 +10,21 @@ class Database {
     }
 
     async hasActiveInvite(userId) {
+        const activeInvites = await this.prisma.invite.count({
+            where: {
+                inviter_id: userId,
+                status: 'pending'
+            }
+        })
 
+        return activeInvites > 0
     }
 
     async wasSubscriber(userId) {
 
     }
 
-    async alreadyInvitedByForward(userId) {
+    async alreadyInvitedById(userId) {
 
     }
 
