@@ -33,6 +33,7 @@ class AdminLogProcessor:
             self.report_flood_error()
 
             raise e
+        # TODO Exclude paired events
 
         self.db.save_request()
         self.save_events(events)

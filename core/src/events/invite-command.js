@@ -20,8 +20,15 @@ class InviteCommand extends Command {
     }
 
     async inviteById() {
-        return await this.respond('Trying to invite by id')
-        const invitedId = this.event.WHAT
+        const invitedId = +this.event.message.text
+
+        if (await db.wasSubscribedCheckById(invitedId)) {
+            await this.respond(
+                'Пользователь с таким ID уже был когда-то подписан на канал, пожалуйста, выберите другого!'
+            )
+
+            return
+        }
 
         if (await db.alreadyInvitedById(invitedId)) {
             await this.respond(
@@ -31,14 +38,21 @@ class InviteCommand extends Command {
             return
         }
 
-        await db.createInvite(/** TODO */)
+        await db.createInviteById(this.event.message.from.id, invitedId)
 
         await this.inviteCreated()
     }
 
     async inviteByHandle() {
-        return await this.respond('Trying to invite by handle')
         const username = this.event.message.text.substring(1)
+
+        if (await db.wasSubscribedCheckByUsername(username)) {
+            await this.respond(
+                'Пользователь с таким юзернеймом уже был когда-то подписан на канал, пожалуйста, выберите другого!'
+            )
+
+            return
+        }
 
         if (await db.alreadyInvitedByUsername(username)) {
             await this.respond(
@@ -48,13 +62,14 @@ class InviteCommand extends Command {
             return
         }
 
-        await db.createInvite(/** TODO */)
+        await db.createInviteByUsername(this.event.message.from.id, username)
 
         await this.inviteCreated()
     }
 
+    // TODO Think about infinite user lock
     async inviteCreated() {
-        await this.respond('Приглашение создано. Даю 10 минут на подписку!')
+        await this.respond('Приглашение создано ✅')
     }
 }
 

@@ -10,30 +10,66 @@ class Database {
     }
 
     async hasActiveInvite(userId) {
-        const activeInvites = await this.prisma.invite.count({
+        return 0 < await this.prisma.invite.count({
             where: {
                 inviter_id: userId,
                 status: 'pending'
             }
         })
-
-        return activeInvites > 0
     }
 
-    async wasSubscriber(userId) {
+    async wasSubscribedCheckById(userId) {
+        return 0 < await this.prisma.subscriber.count({
+            where: {
+                user_id: userId
+            }
+        })
+    }
 
+    async wasSubscribedCheckByUsername(username) {
+        return 0 < await this.prisma.subscriber.count({
+            where: {
+                username: username
+            }
+        })
     }
 
     async alreadyInvitedById(userId) {
-
+        return 0 < await this.prisma.invite.count({
+            where: {
+                invited_id: userId,
+                status: 'pending'
+            }
+        })
     }
 
-    async alreadyInvitedByUsername(userId) {
-
+    async alreadyInvitedByUsername(username) {
+        return 0 < await this.prisma.invite.count({
+            where: {
+                invited_username: username,
+                status: 'pending'
+            }
+        })
     }
 
-    async createInvite(inviterId, invitedId, invitedUsername) {
+    async createInviteById(inviterId, invitedId) {
+        return await this.prisma.invite.create({
+            data: {
+                invited_id: invitedId,
+                inviter_id: inviterId,
+                status: 'pending'
+            }
+        })
+    }
 
+    async createInviteByUsername(inviterId, invitedUsername) {
+        return await this.prisma.invite.create({
+            data: {
+                invited_username: invitedUsername,
+                inviter_id: inviterId,
+                status: 'pending'
+            }
+        })
     }
 
     async markEventAsProcessed(id) {

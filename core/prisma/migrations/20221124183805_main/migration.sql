@@ -33,6 +33,7 @@ CREATE TABLE "chat_members" (
 CREATE TABLE "subscribers" (
     "id" SERIAL NOT NULL,
     "user_id" BIGINT NOT NULL,
+    "username" VARCHAR(255) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "subscribers_pkey" PRIMARY KEY ("id")
@@ -60,12 +61,6 @@ CREATE TABLE "requests" (
 
     CONSTRAINT "requests_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "chat_members_user_id_key" ON "chat_members"("user_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "subscribers_user_id_key" ON "subscribers"("user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "events_telegram_event_id_key" ON "events"("telegram_event_id");

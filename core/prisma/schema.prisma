@@ -27,7 +27,7 @@ model Invite {
 model ChatMember {
     @@map("chat_members")
     id        Int      @id @default(autoincrement())
-    user_id   BigInt   @unique
+    user_id   BigInt
     username  String   @db.VarChar(255)
     joined_at DateTime @default(now())
 }
@@ -35,7 +35,8 @@ model ChatMember {
 model Subscriber {
     @@map("subscribers")
     id         Int      @id @default(autoincrement())
-    user_id    BigInt      @unique
+    user_id    BigInt
+    username   String   @db.VarChar(255)
     created_at DateTime @default(now())
 }
 
