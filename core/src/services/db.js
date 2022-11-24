@@ -82,6 +82,26 @@ class Database {
             }
         })
     }
+
+    async getActiveInvite(userId) {
+        return await this.prisma.invite.findFirst({
+            where: {
+                inviter_id: userId,
+                status: 'pending'
+            }
+        })
+    }
+
+    async cancelInvite(inviteId) {
+        return await this.prisma.invite.update({
+            where: {
+                id: inviteId
+            },
+            data: {
+                status: 'cancelled'
+            }
+        })
+    }
 }
 
 const db = new Database()
