@@ -2,8 +2,6 @@ from datetime import datetime
 import os
 import psycopg2
 
-REQUEST_TYPE_ADMIN_LOG = 'admin_log'
-
 
 class Database:
     def __init__(self):
@@ -35,7 +33,7 @@ class Database:
         return self.cursor.fetchall()
 
     def save_request(self):
-        self.cursor.execute('INSERT INTO requests (type) VALUES (%s)', (REQUEST_TYPE_ADMIN_LOG,))
+        self.cursor.execute('INSERT INTO requests DEFAULT VALUES;')
 
         self.commit()
 

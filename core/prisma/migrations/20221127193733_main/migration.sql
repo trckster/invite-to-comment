@@ -4,9 +4,6 @@ CREATE TYPE "InviteStatus" AS ENUM ('pending', 'cancelled', 'times_up', 'success
 -- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('subscribed', 'unsubscribed');
 
--- CreateEnum
-CREATE TYPE "RequestType" AS ENUM ('admin_log');
-
 -- CreateTable
 CREATE TABLE "invites" (
     "id" SERIAL NOT NULL,
@@ -56,7 +53,6 @@ CREATE TABLE "events" (
 -- CreateTable
 CREATE TABLE "requests" (
     "id" SERIAL NOT NULL,
-    "type" "RequestType" NOT NULL,
     "processed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "requests_pkey" PRIMARY KEY ("id")
