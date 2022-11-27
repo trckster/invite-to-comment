@@ -102,6 +102,23 @@ class Database {
             }
         })
     }
+
+    async getLastRequest() {
+        return await this.prisma.request.findFirst({
+            orderBy: {
+                processed_at: 'desc'
+            }
+        })
+    }
+
+    async getNLastRequests(n) {
+        return await this.prisma.request.findMany({
+            orderBy: {
+                processed_at: 'desc'
+            },
+            take: n
+        })
+    }
 }
 
 const db = new Database()
