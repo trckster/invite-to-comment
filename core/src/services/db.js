@@ -5,10 +5,6 @@ class Database {
         this.prisma = new PrismaClient();
     }
 
-    async isChatMember(userId) {
-
-    }
-
     async hasActiveInvite(userId) {
         return 0 < await this.prisma.invite.count({
             where: {

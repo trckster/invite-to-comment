@@ -18,8 +18,6 @@ function recognizeEvent(event) {
             return new UserSubscribed(event)
         case 'unsubscribed':
             return new UserUnsubscribed(event)
-        case 'join-request':
-            return new JoinRequestMade(event)
         case 'error':
             return new ErrorOccurred(event)
         case 'message':
@@ -28,6 +26,10 @@ function recognizeEvent(event) {
 }
 
 function recognizeMessage(event) {
+    if (event.chat_join_request) {
+        return new JoinRequestMade(event)
+    }
+
     if (messageFromChatOrChannel(event)) {
         return
     }

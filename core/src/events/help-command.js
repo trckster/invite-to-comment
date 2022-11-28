@@ -2,6 +2,7 @@ import {Command} from "./command.js";
 
 class HelpCommand extends Command {
     async process() {
+        /** TODO */
         await this.respond(
             'Это бот канала @' + process.env.CHANNEL_HANDLE + ', ' +
             'здесь вы можете получить доступ к комментариям, пригласив в канал друга.\n' +
