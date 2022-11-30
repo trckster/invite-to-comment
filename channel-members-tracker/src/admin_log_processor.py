@@ -33,9 +33,11 @@ class AdminLogProcessor:
             self.report_flood_error()
 
             raise e
-        # TODO Exclude paired events
 
         self.db.save_request()
+
+        events = self.filter_events(events)
+        events = self.collapse_events(events)
         self.save_events(events)
 
         unprocessed_events = self.db.get_unprocessed_events()
@@ -48,7 +50,6 @@ class AdminLogProcessor:
                 'action': event[4],
                 'user_id': event[5],
                 'username': event[6],
-                'initiator': self.initiator
             }
 
             self.queue.publish(dumps(data))
@@ -57,12 +58,10 @@ class AdminLogProcessor:
         events_count = 0
 
         for event in events:
-            if event.joined or event.joined_by_invite:
-                event_type = TYPE_SUBSCRIBED
-            elif event.left:
+            if event.left:
                 event_type = TYPE_UNSUBSCRIBED
             else:
-                continue
+                event_type = TYPE_SUBSCRIBED
 
             events_count += 1
 
@@ -71,3 +70,59 @@ class AdminLogProcessor:
             self.db.create_event(event.id, event.date, event_type, event.user_id, event.user.username)
 
         log(f'New events count: {events_count}')
+
+    def collapse_events(self, events: list) -> list:
+        events = events[::-1]
+
+        i = 0
+        while i < len(events):
+            event = events[i]
+
+            if event is None:
+                i += 1
+                continue
+
+            user_events_ids = [i]
+
+            j = i + 1
+            while j < len(events):
+                compared_event = events[j]
+
+                if compared_event is not None and event.user_id == compared_event.user_id:
+                    user_events_ids.append(j)
+
+                j += 1
+
+            sub = 0
+            if len(user_events_ids) % 2 == 1:
+                sub = 1
+
+            for j in range(len(user_events_ids) - sub):
+                id_to_remove = user_events_ids[j]
+
+                if events[id_to_remove].left:
+                    event_type = TYPE_UNSUBSCRIBED
+                else:
+                    event_type = TYPE_SUBSCRIBED
+
+                log(f'Removing action: {event.user_id} {event_type}')
+
+                events[id_to_remove] = None
+
+            i += 1
+
+        result = []
+        for event in events:
+            if event is not None:
+                result.append(event)
+
+        return result
+
+    def filter_events(self, events: list) -> list:
+        result = []
+
+        for event in events:
+            if event.joined or event.joined_by_invite or event.left:
+                result.append(event)
+
+        return result
