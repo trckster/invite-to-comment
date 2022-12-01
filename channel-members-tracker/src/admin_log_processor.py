@@ -10,8 +10,8 @@ TYPE_UNSUBSCRIBED = 'unsubscribed'
 
 
 class AdminLogProcessor:
-    def __init__(self, initiator=None):
-        self.initiator = initiator
+    def __init__(self, trigger=None):
+        self.trigger = trigger
 
         self.db = Database()
         self.mtproto = TelegramAPI()
@@ -40,6 +40,8 @@ class AdminLogProcessor:
         events = self.collapse_events(events)
         self.save_events(events)
 
+        self.check_trigger_invite(events)
+
         unprocessed_events = self.db.get_unprocessed_events()
         self.distribute_events(unprocessed_events)
 
@@ -53,6 +55,19 @@ class AdminLogProcessor:
             }
 
             self.queue.publish(dumps(data))
+
+    def check_trigger_invite(self, events: list):
+        for event in events:
+            if event.user_id != self.trigger['invited_id'] and event.user.username != self.trigger['invited_username']:
+                continue
+
+            if event.joined or event.joined_by_invite:
+                return
+
+        self.queue.publish(dumps({
+            'action': 'invitation-not-confirmed',
+            'chatId': self.trigger['chat_id'],
+        }))
 
     def save_events(self, events: list):
         events_count = 0
@@ -93,11 +108,7 @@ class AdminLogProcessor:
 
                 j += 1
 
-            sub = 0
-            if len(user_events_ids) % 2 == 1:
-                sub = 1
-
-            for j in range(len(user_events_ids) - sub):
+            for j in range(len(user_events_ids) - len(user_events_ids) % 2):
                 id_to_remove = user_events_ids[j]
 
                 if events[id_to_remove].left:

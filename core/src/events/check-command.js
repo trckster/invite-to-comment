@@ -33,7 +33,9 @@ class CheckCommand extends Command {
 
         await publish(JSON.stringify({
             command: 'check-admin-log',
-            chatId: this.chatId
+            chatId: this.chatId,
+            invitedId: invite.invited_id,
+            invitedUsername: invite.invited_username
         }), 'mtproto-requests')
     }
 

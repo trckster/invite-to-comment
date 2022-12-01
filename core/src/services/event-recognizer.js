@@ -11,6 +11,7 @@ import {CancelCommand} from "../events/cancel-command.js";
 import {GetIdCommand} from "../events/get-id-command.js";
 import {CheckCommand} from "../events/check-command.js";
 import {ErrorOccurred} from "../events/error-occurred.js";
+import {InvitationNotConfirmed} from "../events/invitation-not-confirmed.js";
 
 function recognizeEvent(event) {
     switch (event.action) {
@@ -18,6 +19,8 @@ function recognizeEvent(event) {
             return new UserSubscribed(event)
         case 'unsubscribed':
             return new UserUnsubscribed(event)
+        case 'invitation-not-confirmed':
+            return new InvitationNotConfirmed(event)
         case 'error':
             return new ErrorOccurred(event)
         case 'message':

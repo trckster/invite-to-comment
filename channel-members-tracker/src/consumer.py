@@ -7,7 +7,15 @@ def receive_command(ch, method, props, body):
     data = loads(body)
 
     if data['command'] == 'check-admin-log':
-        processor = AdminLogProcessor(data['chatId'])
+        if data['invitedId'] is None:
+            data['invitedId'] = -1
+
+        processor = AdminLogProcessor({
+            'chat_id': int(data['chatId']),
+            'invited_id': int(data['invitedId']),
+            'invited_username': data['invitedUsername']
+        })
+
         processor.run()
     else:
         log('Unknown command: %s' % data['command'])

@@ -4,6 +4,8 @@ import {recognizeEvent} from "./services/event-recognizer.js";
 import {startConsuming} from "./services/amqp.js"
 
 dotenv.config()
+BigInt.prototype.toJSON = function() { return this.toString() }
+
 
 await startConsuming('events', async function (message) {
     const event = JSON.parse(message.content.toString())
