@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "InviteStatus" AS ENUM ('pending', 'cancelled', 'times_up', 'successful');
+CREATE TYPE "InviteStatus" AS ENUM ('pending', 'duplicate', 'cancelled', 'successful');
 
 -- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('subscribed', 'unsubscribed');

@@ -11,7 +11,7 @@ class CancelCommand extends Command {
             return
         }
 
-        await db.cancelInvite(invite.id)
+        await db.markInviteAs(invite.id, 'cancelled')
 
         await this.respond('Текущее приглашение отменено ❌')
     }

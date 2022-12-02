@@ -88,13 +88,49 @@ class Database {
         })
     }
 
-    async cancelInvite(inviteId) {
+    async getActiveInviteBySubscription(userId, username) {
+        return await this.prisma.invite.findFirst({
+            where: {
+                OR: [
+                    {
+                        invited_id: userId
+                    }, {
+                        invited_username: username
+                    }
+                ],
+                status: 'pending'
+            },
+            orderBy: {
+                created_at: 'asc'
+            }
+        })
+    }
+
+    async markInviteAs(inviteId, status) {
         return await this.prisma.invite.update({
             where: {
                 id: inviteId
             },
             data: {
-                status: 'cancelled'
+                status
+            }
+        })
+    }
+
+    async updateOtherInvitesOfThisUserAsDuplicate(userId, username) {
+        return await this.prisma.invite.update({
+            where: {
+                OR: [
+                    {
+                        invited_id: userId
+                    }, {
+                        invited_username: username
+                    }
+                ],
+                status: 'pending'
+            },
+            data: {
+                status: 'duplicate'
             }
         })
     }

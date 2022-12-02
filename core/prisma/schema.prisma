@@ -9,8 +9,8 @@ generator client {
 
 enum InviteStatus {
     pending
+    duplicate
     cancelled
-    times_up
     successful
 }
 
