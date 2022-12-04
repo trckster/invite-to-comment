@@ -120,14 +120,19 @@ class Database {
     async updateOtherInvitesOfThisUserAsDuplicate(userId, username) {
         return await this.prisma.invite.update({
             where: {
-                OR: [
+                AND: [
                     {
-                        invited_id: userId
+                        OR: [
+                            {
+                                invited_id: userId
+                            }, {
+                                invited_username: username
+                            }
+                        ]
                     }, {
-                        invited_username: username
+                        status: 'pending'
                     }
-                ],
-                status: 'pending'
+                ]
             },
             data: {
                 status: 'duplicate'
@@ -149,6 +154,32 @@ class Database {
                 processed_at: 'desc'
             },
             take: n
+        })
+    }
+
+    async saveNewSubscriber(userId, username) {
+        const existingSubscriber = await this.prisma.subscriber.findFirst({
+            where: {
+                user_id: userId,
+                username: username,
+            }
+        })
+
+        if (existingSubscriber === null) {
+            await this.prisma.subscriber.create({
+                data: {
+                    user_id: userId,
+                    username: username,
+                }
+            })
+        }
+    }
+
+    async getSuccessfulInvitesCount(userId) {
+        await this.prisma.invite.count({
+            where: {
+                inviter_id: userId
+            }
         })
     }
 }
