@@ -12,6 +12,7 @@ enum InviteStatus {
     duplicate
     cancelled
     successful
+    revoked
 }
 
 model Invite {

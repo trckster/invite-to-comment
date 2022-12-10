@@ -2,7 +2,7 @@ import {PrismaClient} from "@prisma/client";
 
 class Database {
     constructor() {
-        this.prisma = new PrismaClient();
+        this.prisma = new PrismaClient({log: ["query"]});
     }
 
     async hasActiveInvite(userId) {
@@ -118,7 +118,8 @@ class Database {
     }
 
     async updateOtherInvitesOfThisUserAsDuplicate(userId, username) {
-        const res =  await this.prisma.invite.updateMany({
+        // TODO rework like getSuccessfulInvitationByInvited
+        await this.prisma.invite.updateMany({
             where: {
                 AND: [
                     {
@@ -132,7 +133,6 @@ class Database {
                                         invited_username: username
                                     },
                                     {
-
                                         invited_username: {
                                             not: null
                                         }
@@ -192,6 +192,27 @@ class Database {
                 inviter_id: userId,
                 status: 'successful'
             }
+        })
+    }
+
+    async getSuccessfulInvitationByInvited(invitedId, invitedUsername) {
+        let filters = {
+            status: 'successful',
+            OR: [
+                {
+                    invited_id: invitedId
+                }
+            ]
+        }
+
+        if (invitedUsername) {
+            filters.OR.push({
+                invited_username: invitedUsername
+            })
+        }
+
+        return await this.prisma.invite.findFirst({
+            where: filters
         })
     }
 }

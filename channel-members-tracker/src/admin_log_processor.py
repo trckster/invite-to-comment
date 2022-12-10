@@ -40,7 +40,8 @@ class AdminLogProcessor:
         events = self.collapse_events(events)
         self.save_events(events)
 
-        self.check_trigger_invite(events)
+        if self.trigger is not None:
+            self.check_trigger_invite(events)
 
         unprocessed_events = self.db.get_unprocessed_events()
         self.distribute_events(unprocessed_events)

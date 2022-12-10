@@ -20,8 +20,9 @@ class TelegramApi {
         await this.bot.telegram.approveChatJoinRequest(process.env.GROUP_CHAT_ID, userId)
     }
 
-    kickFromGroup() {
-
+    async kickFromGroup(userId) {
+        await this.bot.telegram.banChatMember(process.env.GROUP_CHAT_ID, userId)
+        await this.bot.telegram.unbanChatMember(process.env.GROUP_CHAT_ID, userId)
     }
 }
 

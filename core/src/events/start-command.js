@@ -1,8 +1,10 @@
 import {Command} from "./command.js";
 
 function getStartText() {
-    return 'Чтобы пригласить друга в канал @' + process.env.CHANNEL_HANDLE + ', ' +
-        'отправьте его @юзернейм или ID. Больше информации: /help'
+    return 'Привет! Это чатбот канала @' + process.env.CHANNEL_HANDLE + ', ' +
+        'чтобы получить доступ к комментариям, пригласите в этот канал друга. ' +
+        'Отправьте его @юзернейм или ID (/id).\n' +
+        'Больше информации: /help'
 }
 
 class StartCommand extends Command {

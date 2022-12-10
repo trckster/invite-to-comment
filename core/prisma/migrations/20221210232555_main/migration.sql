@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "InviteStatus" AS ENUM ('pending', 'duplicate', 'cancelled', 'successful');
+CREATE TYPE "InviteStatus" AS ENUM ('pending', 'duplicate', 'cancelled', 'successful', 'revoked');
 
 -- CreateEnum
 CREATE TYPE "EventType" AS ENUM ('subscribed', 'unsubscribed');
@@ -30,7 +30,7 @@ CREATE TABLE "chat_members" (
 CREATE TABLE "subscribers" (
     "id" SERIAL NOT NULL,
     "user_id" BIGINT NOT NULL,
-    "username" VARCHAR(255) NOT NULL,
+    "username" VARCHAR(255),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "subscribers_pkey" PRIMARY KEY ("id")
