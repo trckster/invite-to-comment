@@ -4,7 +4,10 @@ import {recognizeEvent} from "./services/event-recognizer.js";
 import {startConsuming} from "./services/amqp.js"
 
 dotenv.config()
-BigInt.prototype.toJSON = function() { return this.toString() }
+
+BigInt.prototype.toJSON = function () {
+    return this.toString()
+}
 
 
 await startConsuming('events', async function (message) {
@@ -26,8 +29,10 @@ await startConsuming('events', async function (message) {
     }
 })
 
-function log(message) {
+function log(message, data = '') {
     const now = new Date().toLocaleString()
 
-    console.log(`[${now}]`, message)
+    console.log(`[${now}]`, message, data)
 }
+
+export {log}

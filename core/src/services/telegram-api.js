@@ -16,8 +16,8 @@ class TelegramApi {
         await this.bot.telegram.sendMessage(process.env.ADMIN_CHAT_ID, message)
     }
 
-    acceptJoinRequest() {
-
+    async acceptJoinRequest(userId) {
+        await this.bot.telegram.approveChatJoinRequest(process.env.GROUP_CHAT_ID, userId)
     }
 
     kickFromGroup() {

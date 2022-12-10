@@ -36,7 +36,7 @@ model Subscriber {
     @@map("subscribers")
     id         Int      @id @default(autoincrement())
     user_id    BigInt
-    username   String   @db.VarChar(255)
+    username   String?  @db.VarChar(255)
     created_at DateTime @default(now())
 }
 

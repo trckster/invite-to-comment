@@ -118,15 +118,26 @@ class Database {
     }
 
     async updateOtherInvitesOfThisUserAsDuplicate(userId, username) {
-        return await this.prisma.invite.update({
+        const res =  await this.prisma.invite.updateMany({
             where: {
                 AND: [
                     {
                         OR: [
                             {
                                 invited_id: userId
-                            }, {
-                                invited_username: username
+                            },
+                            {
+                                AND: [
+                                    {
+                                        invited_username: username
+                                    },
+                                    {
+
+                                        invited_username: {
+                                            not: null
+                                        }
+                                    }
+                                ]
                             }
                         ]
                     }, {
@@ -176,9 +187,10 @@ class Database {
     }
 
     async getSuccessfulInvitesCount(userId) {
-        await this.prisma.invite.count({
+        return await this.prisma.invite.count({
             where: {
-                inviter_id: userId
+                inviter_id: userId,
+                status: 'successful'
             }
         })
     }
