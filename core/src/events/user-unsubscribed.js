@@ -21,7 +21,7 @@ class UserUnsubscribed extends AppEvent {
         if (this.event.username) {
             message += '@' + this.event.username
         } else {
-            message += 'c ID ' + this.event.user_id // TODO why undefined
+            message += 'c ID ' + this.event.user_id
         }
 
         if (lives < 1) {

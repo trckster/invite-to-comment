@@ -12,6 +12,7 @@ import {GetIdCommand} from "../events/get-id-command.js";
 import {CheckCommand} from "../events/check-command.js";
 import {ErrorOccurred} from "../events/error-occurred.js";
 import {InvitationNotConfirmed} from "../events/invitation-not-confirmed.js";
+import {GetLivesCommand} from "../events/get-lives-command.js";
 
 function recognizeEvent(event) {
     switch (event.action) {
@@ -41,6 +42,10 @@ function recognizeMessage(event) {
 
     if (message === undefined) {
         return new UnknownCommand(event)
+    }
+
+    if (message.startsWith('/lives')) {
+        return new GetLivesCommand(event)
     }
 
     if (message.startsWith('/cancel')) {
