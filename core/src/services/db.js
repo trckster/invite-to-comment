@@ -118,33 +118,23 @@ class Database {
     }
 
     async updateOtherInvitesOfThisUserAsDuplicate(userId, username) {
-        // TODO rework like getSuccessfulInvitationByInvited
+        let filters = {
+            status: 'pending',
+            OR: [
+                {
+                    invited_id: userId
+                }
+            ]
+        }
+
+        if (username) {
+            filters.OR.push({
+                invited_username: username
+            })
+        }
+
         await this.prisma.invite.updateMany({
-            where: {
-                AND: [
-                    {
-                        OR: [
-                            {
-                                invited_id: userId
-                            },
-                            {
-                                AND: [
-                                    {
-                                        invited_username: username
-                                    },
-                                    {
-                                        invited_username: {
-                                            not: null
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }, {
-                        status: 'pending'
-                    }
-                ]
-            },
+            where: filters,
             data: {
                 status: 'duplicate'
             }

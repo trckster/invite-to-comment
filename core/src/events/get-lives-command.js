@@ -7,7 +7,18 @@ class GetLivesCommand extends Command {
 
         const livesCount = await db.getSuccessfulInvitesCount(userId)
 
-        await this.respond(`Кол-во жизней: ${livesCount}`)
+        let emoji
+        if (livesCount > 0) {
+            emoji = '❤'.repeat(livesCount)
+        } else {
+            emoji = '💔'
+        }
+
+        await this.respond(
+            `Кол-во жизней: ${livesCount}\n${emoji}`
+        )
+
+        // TODO:non-mvp add list of invited users
     }
 }
 
