@@ -3,7 +3,7 @@ import {db} from "../services/db.js";
 
 class CancelCommand extends Command {
     async process() {
-        const invite = await db.getActiveInvite(this.event.message.from.id)
+        const invite = await db.getActiveInviteByInviterId(this.event.message.from.id)
 
         if (invite === null) {
             await this.respond('У вас нет активного приглашения')

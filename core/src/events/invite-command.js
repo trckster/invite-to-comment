@@ -2,9 +2,11 @@ import {Command} from "./command.js";
 import {db} from "../services/db.js";
 import {isValidTelegramUserId} from "../services/event-recognizer.js";
 
+const MINUTES_UNTIL_OVERWRITE = 30
+
 class InviteCommand extends Command {
     async process() {
-        if (await db.hasActiveInvite()) {
+        if (await db.hasActiveInvite(this.event.message.from.id)) {
             await this.respond(
                 'У вас уже есть актвиное приглашение, чтобы его отменить, отправьте /cancel'
             )
@@ -30,12 +32,18 @@ class InviteCommand extends Command {
             return
         }
 
-        if (await db.alreadyInvitedById(invitedId)) {
-            await this.respond(
-                'Кто-то уже пригласил этого пользователя, попробуйте другого!'
-            )
+        const invite = await db.getActiveInviteByInvitedId(invitedId)
 
-            return
+        if (invite !== null) {
+            if (this.isGuarded(invite)) {
+                await this.respond(
+                    'Кто-то уже пригласил этого пользователя, попробуйте другого!'
+                )
+
+                return
+            }
+
+            await db.markInviteAs(invite.id, 'overwritten')
         }
 
         await db.createInviteById(this.event.message.from.id, invitedId)
@@ -54,12 +62,18 @@ class InviteCommand extends Command {
             return
         }
 
-        if (await db.alreadyInvitedByUsername(username)) {
-            await this.respond(
-                'Кто-то уже пригласил этого пользователя, попробуйте другого!'
-            )
+        const invite = await db.getActiveInviteByInvitedUsername(username)
 
-            return
+        if (invite !== null) {
+            if (this.isGuarded(invite)) {
+                await this.respond(
+                    'Кто-то уже пригласил этого пользователя, попробуйте другого!'
+                )
+
+                return
+            }
+
+            await db.markInviteAs(invite.id, 'overwritten') // TODO notify inviter_id for overwritten invite
         }
 
         await db.createInviteByUsername(this.event.message.from.id, username)
@@ -67,9 +81,14 @@ class InviteCommand extends Command {
         await this.inviteCreated()
     }
 
-    // TODO Think about infinite user lock
     async inviteCreated() {
         await this.respond('Приглашение создано ✅')
+    }
+
+    isGuarded(invite) {
+        const guardEnd = invite.created_at.getTime() + MINUTES_UNTIL_OVERWRITE * 1000 * 60
+
+        return guardEnd > Date.now()
     }
 }
 

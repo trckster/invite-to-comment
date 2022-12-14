@@ -2,7 +2,7 @@ import {PrismaClient} from "@prisma/client";
 
 class Database {
     constructor() {
-        this.prisma = new PrismaClient({log: ["query"]});
+        this.prisma = new PrismaClient({log: ['query']});
     }
 
     async hasActiveInvite(userId) {
@@ -30,8 +30,18 @@ class Database {
         })
     }
 
-    async alreadyInvitedById(userId) {
-        return 0 < await this.prisma.invite.count({
+    async getActiveInviteByInviterId(userId)
+    {
+        return await this.prisma.invite.findFirst({
+            where: {
+                inviter_id: userId,
+                status: 'pending'
+            }
+        })
+    }
+
+    async getActiveInviteByInvitedId(userId) {
+        return await this.prisma.invite.findFirst({
             where: {
                 invited_id: userId,
                 status: 'pending'
@@ -39,8 +49,8 @@ class Database {
         })
     }
 
-    async alreadyInvitedByUsername(username) {
-        return 0 < await this.prisma.invite.count({
+    async getActiveInviteByInvitedUsername(username) {
+        return await this.prisma.invite.findFirst({
             where: {
                 invited_username: username,
                 status: 'pending'
@@ -75,15 +85,6 @@ class Database {
             },
             data: {
                 processed_at: new Date()
-            }
-        })
-    }
-
-    async getActiveInvite(userId) {
-        return await this.prisma.invite.findFirst({
-            where: {
-                inviter_id: userId,
-                status: 'pending'
             }
         })
     }

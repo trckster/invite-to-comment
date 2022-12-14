@@ -13,6 +13,7 @@ enum InviteStatus {
     cancelled
     successful
     revoked
+    overwritten
 }
 
 model Invite {
