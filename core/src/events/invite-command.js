@@ -1,6 +1,7 @@
 import {Command} from "./command.js";
 import {db} from "../services/db.js";
 import {isValidTelegramUserId} from "../services/event-recognizer.js";
+import {telegramApi} from "../services/telegram-api.js";
 
 const MINUTES_UNTIL_OVERWRITE = 30
 
@@ -43,7 +44,7 @@ class InviteCommand extends Command {
                 return
             }
 
-            await db.markInviteAs(invite.id, 'overwritten')
+            await this.overwriteInvite(invite)
         }
 
         await db.createInviteById(this.event.message.from.id, invitedId)
@@ -73,7 +74,7 @@ class InviteCommand extends Command {
                 return
             }
 
-            await db.markInviteAs(invite.id, 'overwritten') // TODO notify inviter_id for overwritten invite
+            await this.overwriteInvite(invite)
         }
 
         await db.createInviteByUsername(this.event.message.from.id, username)
@@ -89,6 +90,15 @@ class InviteCommand extends Command {
         const guardEnd = invite.created_at.getTime() + MINUTES_UNTIL_OVERWRITE * 1000 * 60
 
         return guardEnd > Date.now()
+    }
+
+    async overwriteInvite(invite) {
+        await telegramApi.sendMessage(
+            invite.inviter_id,
+            'Ваше последнее приглашение истекло, пользователь не подписался ⌛'
+        )
+
+        await db.markInviteAs(invite.id, 'overwritten')
     }
 }
 
