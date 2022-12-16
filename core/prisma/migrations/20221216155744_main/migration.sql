@@ -17,16 +17,6 @@ CREATE TABLE "invites" (
 );
 
 -- CreateTable
-CREATE TABLE "chat_members" (
-    "id" SERIAL NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    "username" VARCHAR(255) NOT NULL,
-    "joined_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "chat_members_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "subscribers" (
     "id" SERIAL NOT NULL,
     "user_id" BIGINT NOT NULL,

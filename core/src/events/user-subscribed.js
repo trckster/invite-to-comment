@@ -27,10 +27,10 @@ class UserSubscribed extends AppEvent {
 
         await telegramApi.sendMessage(
             activeInvite.inviter_id,
-            `Пользователь ${user} подписался по вашему приглашению! 🎆`
+            `Пользователь ${user} подписался по вашему приглашению!`
         )
+        await telegramApi.sendMessage(activeInvite.inviter_id,'🎆')
 
-        // TODO check, that every command works good with username=undefined
         await db.updateOtherInvitesOfThisUserAsDuplicate(this.event.user_id, this.event.username)
 
         try {
