@@ -21,6 +21,12 @@ services:
     build:
       context: telegram-receiver
 
+  channel-members-tracker-job:
+    <<: *common
+    build:
+      context: channel-members-tracker
+      dockerfile: Dockerfile.job
+
   channel-members-tracker:
     <<: *common
     build:
