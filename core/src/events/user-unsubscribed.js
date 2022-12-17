@@ -31,12 +31,11 @@ class UserUnsubscribed extends AppEvent {
             message += `. Количество оставшихся жизней: ${lives}.`
         }
 
-        await telegramApi.sendMessage(invite.inviter_id, message)
-
         if (lives < 1) {
-            // TODO Send message to group
             await telegramApi.kickFromGroup(invite.inviter_id)
         }
+
+        await telegramApi.sendMessage(invite.inviter_id, message)
     }
 }
 
