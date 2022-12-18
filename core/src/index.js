@@ -11,6 +11,7 @@ BigInt.prototype.toJSON = function () {
 
 
 await startConsuming('events', async function (message) {
+    // TODO:non-mvp handle new posts in channel to write message in comments
     const event = JSON.parse(message.content.toString())
 
     log(event)

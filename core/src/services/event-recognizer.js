@@ -88,7 +88,7 @@ function isValidTelegramUserId(text) {
 }
 
 function messageFromChatOrChannel(event) {
-    return event.channel_post || event.message.chat.id < 0
+    return event.channel_post || event.my_chat_member || event.message.chat.id < 0
 }
 
 export {recognizeEvent, isValidTelegramUserId}
