@@ -18,6 +18,7 @@ class InviteCommand extends Command {
         if (isValidTelegramUserId(this.event.message.text)) {
             await this.inviteById()
         } else {
+            // TODO add handle validation
             await this.inviteByHandle()
         }
     }

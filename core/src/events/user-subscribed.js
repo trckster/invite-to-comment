@@ -15,7 +15,7 @@ class UserSubscribed extends AppEvent {
             return
         }
 
-        if (activeInvite.inviter_id === this.event.user_id) {
+        if (BigInt(activeInvite.inviter_id) === BigInt(this.event.user_id)) {
             await db.markEventAsProcessed(this.event.action_id)
 
             await telegramApi.sendMessage(

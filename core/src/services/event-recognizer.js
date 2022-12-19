@@ -52,6 +52,7 @@ function recognizeMessage(event) {
         return new CancelCommand(event)
     }
 
+    // TODO replace with /dump
     if (message.startsWith('/ping')) {
         return new PingCommand(event)
     }
