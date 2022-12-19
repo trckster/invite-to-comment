@@ -32,7 +32,10 @@ class UserUnsubscribed extends AppEvent {
         }
 
         if (lives < 1) {
-            await telegramApi.kickFromGroup(invite.inviter_id)
+            try {
+                await telegramApi.kickFromGroup(invite.inviter_id)
+            } catch (error) {
+            }
         }
 
         await telegramApi.sendMessage(invite.inviter_id, message)
