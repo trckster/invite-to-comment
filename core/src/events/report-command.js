@@ -10,7 +10,7 @@ class ReportCommand extends Command {
             .join(' ')
 
         if (realText === '') {
-            await this.respond('Usage: /report <your information here>')
+            await this.respond('Использование: /report Тут напишите ваше сообщение')
         } else {
             const reporter = this.event.message.from
 

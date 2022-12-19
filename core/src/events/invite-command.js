@@ -25,6 +25,12 @@ class InviteCommand extends Command {
     async inviteById() {
         const invitedId = +this.event.message.text
 
+        if (this.event.message.from.id === invitedId) {
+            await this.selfInvite()
+
+            return
+        }
+
         if (await db.wasSubscribedCheckById(invitedId)) {
             await this.respond(
                 'Пользователь с таким ID уже был когда-то подписан на канал, пожалуйста, выберите другого!'
@@ -54,6 +60,12 @@ class InviteCommand extends Command {
 
     async inviteByHandle() {
         const username = this.event.message.text.substring(1)
+
+        if (this.event.message.from.username === username) {
+            await this.selfInvite()
+
+            return
+        }
 
         if (await db.wasSubscribedCheckByUsername(username)) {
             await this.respond(
@@ -99,6 +111,19 @@ class InviteCommand extends Command {
         )
 
         await db.markInviteAs(invite.id, 'overwritten')
+    }
+
+    async selfInvite() {
+        const answers = [
+            'Нельзя приглашать самого/саму себя',
+            'Выберите, пожалуйста, ДРУГОГО пользователя',
+            '🌚',
+            '🛂🚫'
+        ];
+
+        const answer = answers[Math.floor(Math.random() * answers.length)];
+
+        await this.respond(answer)
     }
 }
 

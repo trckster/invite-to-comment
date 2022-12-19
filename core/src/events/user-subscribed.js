@@ -15,6 +15,19 @@ class UserSubscribed extends AppEvent {
             return
         }
 
+        if (activeInvite.inviter_id === this.event.user_id) {
+            await db.markEventAsProcessed(this.event.action_id)
+
+            await telegramApi.sendMessage(
+                activeInvite.inviter_id,
+                'Нет-нет-нет, так не пойдёт. Я отменил приглашение. 💀'
+            )
+
+            await db.markInviteAs(activeInvite.id, 'cancelled')
+
+            return;
+        }
+
         log('Successful invitation: ', activeInvite)
         await db.markInviteAs(activeInvite.id, 'successful')
 
@@ -29,7 +42,7 @@ class UserSubscribed extends AppEvent {
             activeInvite.inviter_id,
             `Пользователь ${user} подписался по вашему приглашению!`
         )
-        await telegramApi.sendMessage(activeInvite.inviter_id,'🎆')
+        await telegramApi.sendMessage(activeInvite.inviter_id, '🎆')
 
         await db.updateOtherInvitesOfThisUserAsDuplicate(this.event.user_id, this.event.username)
 
