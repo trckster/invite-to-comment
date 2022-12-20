@@ -1,4 +1,4 @@
-import {PingCommand} from "../events/ping-command.js";
+import {DumpCommand} from "../events/dump-command.js";
 import {UserSubscribed} from "../events/user-subscribed.js";
 import {UserUnsubscribed} from "../events/user-unsubscribed.js";
 import {JoinRequestMade} from "../events/join-request-made.js";
@@ -52,9 +52,8 @@ function recognizeMessage(event) {
         return new CancelCommand(event)
     }
 
-    // TODO replace with /dump
-    if (message.startsWith('/ping')) {
-        return new PingCommand(event)
+    if (message.startsWith('/dump')) {
+        return new DumpCommand(event)
     }
 
     if (message.startsWith('/start')) {

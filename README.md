@@ -8,4 +8,4 @@ It can automatically check subscriptions, add and remove users from comments. Th
 - Set necessary environment variables
 - `docker compose up -d`
 
-If you need translations russian texts from code, let me know - daniil@vivaldi.net
+If you need translations of russian texts from code - let me know: daniil@vivaldi.net
