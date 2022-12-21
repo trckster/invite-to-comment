@@ -1,7 +1,8 @@
 import {Command} from "./command.js";
 import {db} from "../services/db.js";
-import {isValidTelegramUserId} from "../services/event-recognizer.js";
+import {isValidTelegramUserId, isValidTelegramUsername} from "../services/event-recognizer.js";
 import {telegramApi} from "../services/telegram-api.js";
+import {log} from "../index.js";
 
 const MINUTES_UNTIL_OVERWRITE = 30
 
@@ -17,9 +18,10 @@ class InviteCommand extends Command {
 
         if (isValidTelegramUserId(this.event.message.text)) {
             await this.inviteById()
-        } else {
-            // TODO add handle validation
+        } else if (isValidTelegramUsername(this.event.message.text)) {
             await this.inviteByHandle()
+        } else {
+            log(`Invalid invite launch for text ${this.event.message.text}`)
         }
     }
 

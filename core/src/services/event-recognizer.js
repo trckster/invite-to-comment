@@ -76,7 +76,7 @@ function recognizeMessage(event) {
         return new CheckCommand(event)
     }
 
-    if (isValidTelegramUserId(message) || message.startsWith('@')) {
+    if (isValidTelegramUserId(message) || isValidTelegramUsername(message)) {
         return new InviteCommand(event)
     }
 
@@ -87,8 +87,12 @@ function isValidTelegramUserId(text) {
     return !isNaN(text)
 }
 
+function isValidTelegramUsername(text) {
+    return /^@\w{4,32}$/.test(text)
+}
+
 function messageFromChatOrChannel(event) {
     return event.channel_post || event.my_chat_member || event.message.chat.id < 0
 }
 
-export {recognizeEvent, isValidTelegramUserId}
+export {recognizeEvent, isValidTelegramUserId, isValidTelegramUsername}
