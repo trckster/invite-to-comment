@@ -34,7 +34,7 @@ function recognizeMessage(event) {
         return new JoinRequestMade(event)
     }
 
-    if (messageFromChatOrChannel(event)) {
+    if (event.edited_message || messageFromChatOrChannel(event)) {
         return
     }
 
