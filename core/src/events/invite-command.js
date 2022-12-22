@@ -98,7 +98,10 @@ class InviteCommand extends Command {
     }
 
     async inviteCreated() {
-        await this.respond('Приглашение создано ✅')
+        await this.respond(
+            'Приглашение создано ✅\n\n' +
+            'После того, как пользователь подпишется, отправьте /check чтобы бот это проверил.'
+        )
     }
 
     isGuarded(invite) {
