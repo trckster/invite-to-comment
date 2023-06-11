@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+
+  telegram-receiver:
+    environment:
+      RABBITMQ_HOST: rabbit
+      BOT_TOKEN: ${BOT_TOKEN}
+    image: trckster/invite-to-comment.telegram-receiver
+
+  channel-members-tracker-job:
+    environment:
+      DB_HOST: postgres
+      DB_NAME: itc
+      DB_USER: root
+      RABBITMQ_HOST: rabbit
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_ID: ${API_ID}
+      API_HASH: ${API_HASH}
+      SESSION_KEY: ${SESSION_KEY}
+      CHANNEL_HANDLE: ${CHANNEL_HANDLE}
+    image: trckster/invite-to-comment.channel-members-tracker-job
+
+  channel-members-tracker:
+    environment:
+      DB_HOST: postgres
+      DB_NAME: itc
+      DB_USER: root
+      RABBITMQ_HOST: rabbit
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_ID: ${API_ID}
+      API_HASH: ${API_HASH}
+      SESSION_KEY: ${SESSION_KEY}
+      CHANNEL_HANDLE: ${CHANNEL_HANDLE}
+    image: trckster/invite-to-comment.channel-members-tracker
+
+  core:
+    environment:
+      RABBITMQ_HOST: rabbit
+      DATABASE_URL: ${DATABASE_URL}
+      BOT_TOKEN: ${BOT_TOKEN}
+      ADMIN_CHAT_ID: ${ADMIN_CHAT_ID}
+      GROUP_CHAT_ID: ${GROUP_CHAT_ID}
+      CHANNEL_HANDLE: ${CHANNEL_HANDLE}
+    image: trckster/invite-to-comment.core
+    command: sh -c "sleep 15 && npx prisma migrate deploy && yarn launch"
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: itc
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+  rabbit:
+    image: rabbitmq
